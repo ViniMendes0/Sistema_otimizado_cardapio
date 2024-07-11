@@ -1,0 +1,213 @@
+* Primeiro passo: Primeiro passo foi criar uma estrutura básica para que pudesse 
+projetar uma mensagem de boas-vindas.
+
+Usamos o 'def' para definir a mensagem e depois printamos as mensagens
+desejaveis
+
+- def mensagem_de_boas_vindas():
+    print("Bem-vindo ao restaurante!")
+    print("Por favor, o que você vai querer hoje?\n")
+
+
+essa função exibe uma mensagem de boas vindas. 
+
+
+////////////////////////////////////////////////////////////////////////
+
+* Segundo Passo: Criaremos uma lista para armazenar os pratos, usaremos
+a seguinte sintaxe 'cardapio = {
+
+ 1: {"nome do prato": "o que vem nele", "preco": 25.00},
+}
+
+- Essa função exibe um dicionario com os itens disponiveis no cardapio
+e sua descrição.
+
+////////////////////////////////////////////////////////////////////////
+
+* Terceira função: Sera responsavel por exibir o cardapio pro cliente. 
+
+defineremos ela da seguinte maneira.
+
+def exibir_cardapio(cardapio, categoria):
+    print(f"\n--- {categoria} ---")
+    for codigo, item in cardapio.items():
+        item_nome = item.get('nome', '')                                                                            ***
+        print(f"{codigo}. {item_nome} - R${item['Preço']:.2f}")
+
+- Esta função exibe os itens de uma categoria específica do cardápio. Recebe o dicionário do 
+cardápio e a categoria (nome) como argumentos e imprime os itens com seus preços.
+
+////////////////////////////////////////////////////////////////////////
+
+* Quarto Passo: Criamos uma função para que o cliente possa escolher 
+o seu pedido.
+
+def escolher_itens(cardapio):
+    itens_escolhidos = []
+    while True:
+        try:
+            opcoes = input("\nDigite os números dos itens que você deseja, separados por vírgula (ou 0 para voltar ao menu): ")
+            if opcoes.strip() == "0":
+                break
+            opcoes = [int(opcao.strip()) for opcao in opcoes.split(",")]
+            for opcao in opcoes:
+                if opcao in cardapio:
+                    item = cardapio[opcao]                                                                **
+                    item_nome = item.get('nome', '')
+                    itens_escolhidos.append(item)
+                    print(f"\nVocê escolheu: {item_nome} - R${item['Preço']:.2f}")
+                else:
+                    print(f"Opção {opcao} inválida. Tente novamente.")
+        except ValueError:
+            print("Por favor, insira números válidos.")
+    return itens_escolhidos
+
+
+Essa função permite que o cliente possa marcar mais de uma opção no cardapio
+
+
+/////////////////////////////////////////////////////////////////////////
+
+* Quinto passo: Criei uma função simples para caclular o total do pedido do cliente.
+
+
+def calcular_total(itens):
+    total = sum(item['Preço'] for item in itens)
+    return total
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+* Sexto passo: Essa função permite exibir o resumo do pedido
+
+
+def exibir_resumo_pedido(itens):
+    print("\nResumo do seu pedido:")
+    for item in itens:
+        item_nome = item.get('nome', '')
+        print(f"{item_nome} - R${item['Preço']:.2f}")
+    total = calcular_total(itens)
+    print(f"\nTotal a ser pago: R${total:.2f}")
+    return total
+
+////////////////////////////////////////////////////////////////////////////////
+
+* Setimo Passo: Essa função permite o usuario escolher o metodo de pagemento.
+
+
+def escolher_metodo_pagamento():
+    print("\nEscolha o método de pagamento:")
+    print("1. Dinheiro")
+    print("2. Cartão de Crédito")
+    print("3. Cartão de Débito")
+    print("4. Pix")
+    
+    while True:
+        try:
+            opcao = int(input("Digite o número da opção desejada: "))
+            if opcao in [1, 2, 3, 4]:
+                return opcao
+            else:
+                print("Opção inválida. Tente novamente.")
+        except ValueError:
+            print("Por favor, insira um número válido.")
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+* Oitavo passo: Processa o pagamento escolhido pelo usuario.
+
+
+def processar_pagamento(total, metodo):
+    if metodo == 1:
+        print("\nVocê escolheu pagar com Dinheiro.")
+        print(f"Por favor, pague o valor total de R${total:.2f} no caixa.")
+    elif metodo == 2:
+        print("\nVocê escolheu pagar com Cartão de Crédito.")
+        input("Digite o número do cartão: ")
+        input("Digite a data de validade (MM/AA): ")
+        input("Digite o código CVV: ")
+        print("Processando pagamento...")
+    elif metodo == 3:
+        print("\nVocê escolheu pagar com Cartão de Débito.")
+        input("Digite o número do cartão: ")
+        input("Digite a data de validade (MM/AA): ")
+        input("Digite o código CVV: ")
+        print("Processando pagamento...")
+    elif metodo == 4:
+        print("\nVocê escolheu pagar com Pix.")
+        print("Por favor, use o aplicativo do seu banco para escanear o QR code e realizar o pagamento.")
+        input("Pressione Enter após completar o pagamento com Pix.")
+    print("Pagamento realizado com sucesso!\n")
+
+
+//////////////////////////////////////////////////////////////////////////////////
+
+* Nona posição: Essa função mostra para usuario um menu que permita a ele
+escolher a opção desejada e permite que escolha quantos pedidos desejar 
+até finalizar o seu pedido.
+
+
+def main():
+    mensagem_de_boas_vindas()
+    pedido = []
+
+    while True:
+        print("\nCategorias de Cardápio:")
+        print("1. Porções")
+        print("2. Almoço")
+        print("3. Bebidas")
+        print("4. Sobremesas")
+        print("5. Finalizar Pedido")
+        
+        try:
+            categoria = int(input("\nEscolha a categoria que você deseja ver (ou 5 para finalizar): "))
+            if categoria == 1:
+                exibir_cardapio(cardapio_porcoes, "Porções")
+                itens_escolhidos = escolher_itens(cardapio_porcoes)
+                pedido.extend(itens_escolhidos)
+            elif categoria == 2:
+                exibir_cardapio(cardapio_almoco, "Almoço")
+                itens_escolhidos = escolher_itens(cardapio_almoco)
+                pedido.extend(itens_escolhidos)
+            elif categoria == 3:
+                exibir_cardapio(cardapio_bebidas, "Bebidas")
+                itens_escolhidos = escolher_itens(cardapio_bebidas)
+                pedido.extend(itens_escolhidos)
+            elif categoria == 4:
+                exibir_cardapio(cardapio_sobremesas, "Sobremesas")
+                itens_escolhidos = escolher_itens(cardapio_sobremesas)
+                pedido.extend(itens_escolhidos)
+            elif categoria == 5:
+                if not pedido:
+                    print("Você não escolheu nenhum item. Por favor, escolha algo antes de finalizar o pedido.")
+                else:
+                    total = exibir_resumo_pedido(pedido)
+                    metodo_pagamento = escolher_metodo_pagamento()
+                    processar_pagamento(total, metodo_pagamento)
+                    break
+            else:
+                print("Opção inválida. Tente novamente.")
+        except ValueError:
+            print("Por favor, insira um número válido.")
+
+if __name__ == "__main__":
+    main()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
